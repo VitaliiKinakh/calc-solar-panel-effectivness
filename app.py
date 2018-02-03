@@ -1,6 +1,8 @@
-# built in python modules
+# Modules for creating REST API
+from flask import Flask, request, jsonify
+# Built-in modules
 import datetime
-# python add-ons
+# Modules for analysis
 import numpy as np
 import pandas as pd
 import pvlib
@@ -8,8 +10,10 @@ from pvlib.forecast import GFS
 from pvlib import irradiance,atmosphere, pvsystem
 import timezonefinder
 
+# REST API global parameters
+app = Flask(__name__)
 
-# Global variables
+# Solar activity global parameters
 tf = timezonefinder.TimezoneFinder()
 # Define forecast model
 fm = GFS()
@@ -18,6 +22,7 @@ surface_azimuth = 180
 albedo = 0.2
 
 
+# Helper functions
 def get_timezone(lat, lon):
     """
     Find zone for current point
@@ -61,7 +66,7 @@ def get_irradiance_sum_yearly(lat, lon):
     return np.mean([sum1, sum2, sum3])
 
 
-def get_irradiance_for_panel_yearly(lat, lon, panel_area, efficiency=1):
+def get_irradiance_for_panel_yearly(lat, lon, panel_area, efficiency=1.0):
     """
     :param lat: point of interest latitude
     :param lon: point of interest longitude
@@ -69,10 +74,11 @@ def get_irradiance_for_panel_yearly(lat, lon, panel_area, efficiency=1):
     :param efficiency: efficency of panel in range [0, 1]
     :return: yearly sum of irradiance
     """
-    if efficiency <= 1:
+    if efficiency <= 1.0:
         return get_irradiance_sum_yearly(lat, lon) * panel_area * efficiency
     else:
         return get_irradiance_sum_yearly(lat, lon) * panel_area * efficiency / 100
+
 
 def forecast_irradiance(lat, lon):
     """
@@ -119,8 +125,51 @@ def forecast_irradiance(lat, lon):
     return p_ac.sum() * 3
 
 
+@app.route("/api/irradiance_sum_some_period/", methods=["GET"])
+def handle_irradiance_sum_some_period():
+    """
+    Get sum of irradiance in given point using clear sky models
+    and GHI (Diffuse Horizontal Irradiation) parameter of solar activity maps with 1 hour frequency
+    :param lat: point of interest latitude
+    :param lon: point of interest longitude
+    :param start: start of time in pandas date format: the best "yyyy-mm-dd"
+    :param end: end of time
+    :return: sum of irradiance at given time at given position, W/m^2
+    """
+    lat = float(request.args.get('lat', None))
+    lon = float(request.args.get('lon', None))
+    start = request.args.get('start', None)
+    end = request.args.get('end', None)
+    return jsonify({'sum': get_irradiance_sum_some_period(lat, lon, start, end)})
 
 
-print(get_irradiance_sum_some_period(49, 24, "2016-01-01", "2017-01-01"))
-#print(get_irradiance_sum_yearly(49, 24))
-#print(forecast_irradiance(49, 24))
+@app.route("/api/irradiance_sum_yearly/", methods=["GET"])
+def handle_irradiance_sum_yearly():
+    """
+    :param lat: latitude of point of interest
+    :param lon: longitude of point of interest
+    :return: yearly sum of irradience at given position W/m^2
+    """
+    lat = float(request.args.get('lat', None))
+    lon = float(request.args.get('lon', None))
+    return jsonify({'sum': get_irradiance_sum_yearly(lat, lon)})
+
+
+@app.route("/api/irradiance_for_panel_yearly/", methods=["GET"])
+def handles_irradiance_for_panel_yearly():
+    lat = float(request.args.get('lat', None))
+    lon = float(request.args.get('lon', None))
+    panel_area = float(request.args.get('panel_area', None))
+    efficency = float(request.args.get('panel_area', 1))
+    return jsonify({'sum': get_irradiance_for_panel_yearly(lat, lon, panel_area, efficency)})
+
+
+@app.route("/api/forecast_irradiance/", methods=["GET"])
+def handle_forecast_irradience():
+    lat = float(request.args.get('lat', None))
+    lon = float(request.args.get('lon', None))
+    return jsonify({'sum': forecast_irradiance(lat, lon)})
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

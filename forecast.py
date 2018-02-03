@@ -20,7 +20,7 @@ surface_tilt = 30
 surface_azimuth = 180 # pvlib uses 0=North, 90=East, 180=South, 270=West convention
 albedo = 0.2
 # Define forecast model
-fm = HRRR()
+fm = GFS()
 
 
 # Calculate mean irradiance per hour by meter^2 in some period of time
