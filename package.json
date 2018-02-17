@@ -1,0 +1,32 @@
+{
+  "name": "hackanton2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cluster.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node cluster.js"
+  },
+  "keywords": [
+    "lel"
+  ],
+  "author": "kek",
+  "license": "ISC",
+  "dependencies": {
+    "auto-parse": "^1.3.0",
+    "body-parser": "^1.18.2",
+    "cluster": "^0.7.7",
+    "cors": "^2.8.4",
+    "email-validator": "^1.1.1",
+    "express": "^4.16.2",
+    "extend": "^3.0.1",
+    "helmet": "^3.11.0",
+    "method-override": "^2.3.10",
+    "mongoose": "^5.0.6",
+    "morgan": "^1.9.0",
+    "nodemailer": "^4.4.2",
+    "python-shell": "^0.5.0",
+    "randomstring": "^1.1.5",
+    "traverse": "^0.6.6"
+  }
+}

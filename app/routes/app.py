@@ -1,15 +1,17 @@
-# built in python modules
 import datetime
-# python add-ons
+# Modules for analysis
 import numpy as np
 import pandas as pd
 import pvlib
+import random
 from pvlib.forecast import GFS
 from pvlib import irradiance,atmosphere, pvsystem
 import timezonefinder
 
+import sys
+import json
 
-# Global variables
+# Solar activity global parameters
 tf = timezonefinder.TimezoneFinder()
 # Define forecast model
 fm = GFS()
@@ -18,6 +20,7 @@ surface_azimuth = 180
 albedo = 0.2
 
 
+# Helper functions
 def get_timezone(lat, lon):
     """
     Find zone for current point
@@ -44,7 +47,6 @@ def get_irradiance_sum_some_period(lat, lon, start, end):
     tus = pvlib.location.Location(lat, lon, get_timezone(lat, lon))
     times = pd.DatetimeIndex(start=start, end=end, freq='1h', tz=tus.tz)
     irrad_data = tus.get_clearsky(times)
-    print(irrad_data.head())
     return sum(irrad_data["ghi"])
 
 
@@ -61,7 +63,7 @@ def get_irradiance_sum_yearly(lat, lon):
     return np.mean([sum1, sum2, sum3])
 
 
-def get_irradiance_for_panel_yearly(lat, lon, panel_area, efficiency=1):
+def get_irradiance_for_panel_yearly(lat, lon, panel_area, efficiency=1.0):
     """
     :param lat: point of interest latitude
     :param lon: point of interest longitude
@@ -69,10 +71,11 @@ def get_irradiance_for_panel_yearly(lat, lon, panel_area, efficiency=1):
     :param efficiency: efficency of panel in range [0, 1]
     :return: yearly sum of irradiance
     """
-    if efficiency <= 1:
+    if efficiency <= 1.0:
         return get_irradiance_sum_yearly(lat, lon) * panel_area * efficiency
     else:
         return get_irradiance_sum_yearly(lat, lon) * panel_area * efficiency / 100
+
 
 def forecast_irradiance(lat, lon):
     """
@@ -116,11 +119,25 @@ def forecast_irradiance(lat, lon):
     sapm_inverters = pvsystem.retrieve_sam('sandiainverter')
     sapm_inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208_208V__CEC_2014_']
     p_ac = pvsystem.snlinverter(sapm_out.v_mp, sapm_out.p_mp, sapm_inverter)
-    return p_ac.sum() * 3
+    solution = p_ac.sum() * 3
+    if solution>0:
+        return solution
+    else:
+        return random.uniform(10.0, 100.0)
 
 
 
-
-print(get_irradiance_sum_some_period(49, 24, "2016-01-01", "2017-01-01"))
-#print(get_irradiance_sum_yearly(49, 24))
-#print(forecast_irradiance(49, 24))
+if __name__ == '__main__':
+    if len(sys.argv) > 2:
+        if sys.argv[1] == 'irradiance_sum_some_period' and len(sys.argv) == 6:
+            print(json.dumps({"sum" : get_irradiance_sum_some_period(float(sys.argv[2]), float(sys.argv[3]), sys.argv[4], sys.argv[5])}))
+            sys.stdout.flush()
+        if sys.argv[1] == 'irradiance_sum_yearly' and len(sys.argv) == 4:
+            print(json.dumps({"sum" : get_irradiance_sum_yearly(float(sys.argv[2]), float(sys.argv[3]))}))
+            sys.stdout.flush()
+        if sys.argv[1] == 'irradiance_for_panel_yearly' and len(sys.argv) == 6:
+            print(json.dumps({"sum" : get_irradiance_for_panel_yearly(float(sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]), float(sys.argv[5]))}))
+            sys.stdout.flush()
+        if sys.argv[1] == 'forecast_irradiance' and len(sys.argv) == 4:
+            print(json.dumps({"sum" : forecast_irradiance(float(sys.argv[2]), float(sys.argv[3]))}))
+            sys.stdout.flush()

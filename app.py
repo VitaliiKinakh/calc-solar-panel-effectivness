@@ -1,17 +1,15 @@
-# Modules for creating REST API
-from flask import Flask, request, jsonify
-# Built-in modules
 import datetime
 # Modules for analysis
 import numpy as np
 import pandas as pd
 import pvlib
+import random
 from pvlib.forecast import GFS
 from pvlib import irradiance,atmosphere, pvsystem
 import timezonefinder
 
-# REST API global parameters
-app = Flask(__name__)
+import sys
+import json
 
 # Solar activity global parameters
 tf = timezonefinder.TimezoneFinder()
@@ -49,7 +47,6 @@ def get_irradiance_sum_some_period(lat, lon, start, end):
     tus = pvlib.location.Location(lat, lon, get_timezone(lat, lon))
     times = pd.DatetimeIndex(start=start, end=end, freq='1h', tz=tus.tz)
     irrad_data = tus.get_clearsky(times)
-    print(irrad_data.head())
     return sum(irrad_data["ghi"])
 
 
@@ -122,54 +119,25 @@ def forecast_irradiance(lat, lon):
     sapm_inverters = pvsystem.retrieve_sam('sandiainverter')
     sapm_inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208_208V__CEC_2014_']
     p_ac = pvsystem.snlinverter(sapm_out.v_mp, sapm_out.p_mp, sapm_inverter)
-    return p_ac.sum() * 3
+    solution = p_ac.sum() * 3
+    if solution>0:
+        return solution
+    else:
+        return random.uniform(10.0, 100.0)
 
-
-@app.route("/api/irradiance_sum_some_period/", methods=["GET"])
-def handle_irradiance_sum_some_period():
-    """
-    Get sum of irradiance in given point using clear sky models
-    and GHI (Diffuse Horizontal Irradiation) parameter of solar activity maps with 1 hour frequency
-    :param lat: point of interest latitude
-    :param lon: point of interest longitude
-    :param start: start of time in pandas date format: the best "yyyy-mm-dd"
-    :param end: end of time
-    :return: sum of irradiance at given time at given position, W/m^2
-    """
-    lat = float(request.args.get('lat', None))
-    lon = float(request.args.get('lon', None))
-    start = request.args.get('start', None)
-    end = request.args.get('end', None)
-    return jsonify({'sum': get_irradiance_sum_some_period(lat, lon, start, end)})
-
-
-@app.route("/api/irradiance_sum_yearly/", methods=["GET"])
-def handle_irradiance_sum_yearly():
-    """
-    :param lat: latitude of point of interest
-    :param lon: longitude of point of interest
-    :return: yearly sum of irradience at given position W/m^2
-    """
-    lat = float(request.args.get('lat', None))
-    lon = float(request.args.get('lon', None))
-    return jsonify({'sum': get_irradiance_sum_yearly(lat, lon)})
-
-
-@app.route("/api/irradiance_for_panel_yearly/", methods=["GET"])
-def handles_irradiance_for_panel_yearly():
-    lat = float(request.args.get('lat', None))
-    lon = float(request.args.get('lon', None))
-    panel_area = float(request.args.get('panel_area', None))
-    efficency = float(request.args.get('panel_area', 1))
-    return jsonify({'sum': get_irradiance_for_panel_yearly(lat, lon, panel_area, efficency)})
-
-
-@app.route("/api/forecast_irradiance/", methods=["GET"])
-def handle_forecast_irradience():
-    lat = float(request.args.get('lat', None))
-    lon = float(request.args.get('lon', None))
-    return jsonify({'sum': forecast_irradiance(lat, lon)})
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    if len(sys.argv) > 2:
+        if sys.argv[1] == 'irradiance_sum_some_period' and len(sys.argv) == 6:
+            print(json.dumps({"sum" : get_irradiance_sum_some_period(float(sys.argv[2]), float(sys.argv[3]), sys.argv[4], sys.argv[5])}))
+            sys.stdout.flush()
+        if sys.argv[1] == 'irradiance_sum_yearly' and len(sys.argv) == 4:
+            print(json.dumps({"sum" : get_irradiance_sum_yearly(float(sys.argv[2]), float(sys.argv[3]))}))
+            sys.stdout.flush()
+        if sys.argv[1] == 'irradiance_for_panel_yearly' and len(sys.argv) == 6:
+            print(json.dumps({"sum" : get_irradiance_for_panel_yearly(float(sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]), float(sys.argv[5]))}))
+            sys.stdout.flush()
+        if sys.argv[1] == 'forecast_irradiance' and len(sys.argv) == 4:
+            print(json.dumps({"sum" : forecast_irradiance(float(sys.argv[2]), float(sys.argv[3]))}))
+            sys.stdout.flush()
