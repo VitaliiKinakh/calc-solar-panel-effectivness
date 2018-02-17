@@ -160,7 +160,7 @@ def handles_irradiance_for_panel_yearly():
     lat = float(request.args.get('lat', None))
     lon = float(request.args.get('lon', None))
     panel_area = float(request.args.get('panel_area', None))
-    efficency = float(request.args.get('panel_area', 1))
+    efficency = float(request.args.get('efficency', 1))
     return jsonify({'sum': get_irradiance_for_panel_yearly(lat, lon, panel_area, efficency)})
 
 

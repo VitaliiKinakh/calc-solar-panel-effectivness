@@ -121,6 +121,6 @@ def forecast_irradiance(lat, lon):
 
 
 
-print(get_irradiance_sum_some_period(49, 24, "2016-01-01", "2017-01-01"))
+print(get_irradiance_for_panel_yearly(49, 24, 100, 0.2))
 #print(get_irradiance_sum_yearly(49, 24))
 #print(forecast_irradiance(49, 24))

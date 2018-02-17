@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+       html{
+           overflow-x : hidden;
+       }
+       body {
+           margin:0;
+           padding:0;
+       }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+      <div class="container">
+       <div class="row">
+       <div id = "googleMap" style="width:50vw;height:50vh;padding:0;marging:0;" class"col-md-8"></div>
+       <div class="col-md-4">
+       <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+              <a class="nav-link active" id="calc-tab" data-toggle="tab" href="#calc" role="tab" aria-controls="calc" aria-selected="true">Calculate for some period</a>
+          </li>
+          
+         <li class="nav-item">
+              <a class="nav-link active" id="yearly-tab" data-toggle="tab" href="#yearly" role="tab" aria-controls="yearly" aria-selected="true">Calculate yearly</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" id="green-tab" data-toggle="tab" href="#green" role="tab" aria-controls="green" aria-selected="false">Green fare</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="predict-tab" data-toggle="tab" href="#predict" role="tab" aria-controls="predict" aria-selected="false">Predict</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="calc" role="tabpanel" aria-labelledby="calc-tab">
+              <p>Calculate for some period</p>
+              <input type="number" id="area-calc" placeholder="Area">
+              <input type="number" id="efficency-calc" placeholder="Efficency">
+              <p>Start time</p>
+              <input type="date" id="start-time-calc">
+              <p>End time</p>
+              <input type="date" id="end-time-calc">
+              <button id="btn-calc"class="btn btn-success">Calculate</button>                                                 
+          </div>
+          <div class="tab-pane fade" id="yearly" role="tabpanel" aria-labelledby="yearly-tab">
+              <p>Calculate yearly</p>
+              <input type="number" id="area-calc-yearly" placeholder="Area">
+              <input type="number" id="efficency-calc-yearly" placeholder="Efficency">
+              <button id="btn-yearly" class="btn btn-success">Calculate</button>
+          </div>
+          <div class="tab-pane fade" id="green" role="tabpanel" aria-labelledby="contact-tab">
+              <p>Calculate for green fare</p>
+              <input type="number" id="area-calc-green-fare" placeholder="Area">
+              <input type="number" id="efficency-calc-green-fare" placeholder="Efficency">
+              <p>Start time</p>
+              <input type="date" id="start-time-calc-green-fare">
+              <p>End time</p>
+              <input type="date" id="end-time-calc-green-fare">
+              <input type="number" placeholder="Price green fare" id="price-green-fare">
+              <input type="number" placeholder="Price state fare" id="price-state-fare">
+              <button id="btn-green"class="btn btn-success">Calculate</button>
+          </div>
+          
+        </div>
+       <!--<table class="table">
+             <thead>
+                 <th>Calculate</th>
+                 <th>Green face</th>
+                 <th>Predict</th>
+             </thead>
+             <tbody>
+                 <tr>
+                     <th><input type="number" placeholder="Effectivness" id="calculate-effectivness"></th>
+                     <th><input type="number" placeholder="Effectivness" id="green-effectivness"></th>
+                     <th><input type="number" placeholder="Effectivness" id="predict-effectivness"></th>
+                 </tr>
+                 <tr>
+                     <th><input type="number" placeholder="Area" id="calculate-area"></th>
+                     <th><input type="number" placeholder="Area" id="green-area"></th>
+                     <th><input type="number" placeholder="Area" id="predict-area"></th>
+                 </tr>
+                 <tr>
+                     <th></th>
+                     <th><input type="number" placeholder="Price GF" id="green-price"></th>
+                     <th></th>
+                 </tr>
+                 <tr>
+                     <th></th>
+                     <th><input type="number" placeholder="Price state" id="state-price"></th>
+                     <th></th>
+                 </tr>
+                 <tr>
+                     <th><button class="btn btn-success" id="calculate">Calculate</button></th>
+                     <th><button class="btn btn-success" id="calculate-green-fare">Calculate</button></th>
+                     <th><button class="btn btn-success" id="calculate-predict">Calculate</button></th>
+                 </tr>
+             </tbody>
+         </table>-->
+           </div>
+        
+      </div>
+    </div>
+        <div class="row">My panels</div>
+      <div class="row">
+          <table class="table">
+              <thead>
+                  <th>Id</th>
+                  <th>Area</th>
+                  <th>Efficency</th>
+                  <th>Lat</th>
+                  <th>Lon</th>
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+     </div>
+     
+     <div class="row">
+         
+    </div>
+    
+</body>
+<script>
+    
+    function createMap(){
+        
+        var marker;
+        
+        var mapProper={
+            center:new google.maps.LatLng(49.841722, 24.029818),
+            zoom:10,    
+        };
+        var map=new google.maps.Map(document.getElementById("googleMap"),mapProper);
+        
+        google.maps.event.addListener(map, 'click', function(event) {
+            placeMarker(event.latLng);
+            sendPosition(event.latLng);
+        });
+        function sendPosition(location){
+            console.log(location.lat(),location.lng())
+        }
+        function placeMarker(location) {
+            if (marker == undefined){
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map, 
+                    animation: google.maps.Animation.DROP,
+                });
+            }
+            else{
+                marker.setPosition(location);
+            }
+        }
+};
+
+    </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGkqoGAaHZFqT4v3UYMM7SRq79v6p_p5M&callback=createMap"></script>
+</html>
