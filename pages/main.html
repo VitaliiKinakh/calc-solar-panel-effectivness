@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Speed Space Delivery</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/jquery-confirm.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <script src="../js/jquery-3.2.1.min.js"></script>
+  <script src="../js/tether.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/jquery-confirm.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid container-background" style="height:100vh;">
+          <div class="row justify-content-center" style="padding-top:80vh;">
+              <div class="col-4"></div>
+              <div class="col-2"><a style="text-decoration:none" class="btn btn_color" href="office.html">Map</a></div>
+              <div class="col-2"><button style="cursor: pointer;" class="btn btn_color" onclick="office()">Office</button></div>
+              <div class="col-4"></div>
+          </div>
+    </div>
+</body>
+	<script>
+        function sendData(user){ 
+            $.post( "https://solaralc.herokuapp.com/api/users", user, function( data ) {
+              console.log(data);
+            });
+        }
+        function checkForm(){
+            var pr=true;
+
+            var re = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+
+
+            if(!re.test($('#email').val())){
+            $("#email").addClass("text-glow");setTimeout(function () { $("#email").removeClass("text-glow");},1000);pr=false;
+               };
+
+            if(!$('#password').val()){
+            $("#password").addClass("text-glow");setTimeout(function () { $("#password").removeClass("text-glow");},1000);pr=false;
+               };
+
+            return pr;
+        }
+
+            function office(){
+                var contentTemp='<form>'
+                +'<div class="form-group"><lable>Login:<input type="text"  placeholder="example@gmail.com"  id="email" class="form-control">'
+                +'</lable></div>'
+                +'<div class="form-group"><lable>Password:<input type="password"  placeholder="password"  id="password" class="form-control">'
+                +'</lable></div>'
+                contentTemp+='</form>'
+
+               $.confirm({
+                   title:"Acount",
+                   theme: 'light',
+                   columnClass: 'medium',
+                   content:contentTemp,
+                   backgroundDismiss: true,
+                   buttons: {
+                        log: {
+                            text: 'Log in', 
+                            action: function () {
+                                if(!checkForm())
+                                {
+                                    return false;
+                                }else{
+                                    var user = {
+                                        'email':$("#email").val(),
+                                        'password':$("#password").val()
+                                    }
+                                    console.log(user)
+                                    sendData(user);
+                                }
+                            }
+                        },
+                    reg: {
+                        text: 'Register',
+                        action: function () {
+                            if(!checkForm())
+                                {
+                                    return false;
+                                }else{
+                                    var user = {
+                                        'email':$("#email").val(),
+                                        'password':$("#password").val()
+                                    }
+                                    console.log(user)
+                                    sendData(user);
+                                }
+                        }
+                        }
+            }
+               });
+            }
+    </script>
+</html>

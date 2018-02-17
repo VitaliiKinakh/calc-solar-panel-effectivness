@@ -1,0 +1,24 @@
+.nav-background{
+	background-image:url(../images/nav.png);
+	background-size: 100%;
+}
+.hint:after{
+	background: #333;
+	/*background:rgba(0,0,0,.9);*/
+    background: rgba(100,200,255,.9);
+    border-radius: 5px;
+    top:80%;
+    color: #fff;
+    content: attr(data-title);
+    padding: 10px 15px;
+    position: absolute;
+    z-index: 1;
+    width: auto;
+	opacity: 0;
+	transition: opacity 250ms;
+	}
+.hint:hover:after{
+    opacity: 1;
+	transition: opacity 1s;
+	transition-delay: 1s;
+}
