@@ -21,7 +21,9 @@
 <body>
       <div class="container">
           <div class="row">
-              <div id = "googleMap" style="width:50vw;height:50vh;padding:0;marging:0;" class="col-md-8"></div>
+              <div id = "map" style="width:50vw;height:100vh;padding:0;marging:0;" class="col-md-8"></div>
+               <iframe width="100%" height="650px" src="https://embed.windy.com/embed2.html?lat=49.923&lon=24.148&zoom=8&level=surface&overlay=wind&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&detailLat=52.214&detailLon=22.104&metricWind=m/s&metricTemp=°C" frameborder="0" style="display:none;" id ="windMap" class="col-md-8"></iframe>
+               <button style="z-index:1000;position:absolute; top:20px;left:10px; display:none" class="btn btn-secondary" id="btnGoogleMap">Go to google Map</button>
               <div class="col-md-4">
                    <nav>
                       <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -66,64 +68,12 @@
                             <button id="btn-green"class="btn btn-success">Calculate</button>
                         </div>
                     </div>
-       <!--<ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item">
-              <a class="nav-link active" id="calc-tab" data-toggle="tab" href="#calc" role="tab" aria-controls="calc" aria-selected="true" aria-expanded="true">Calculate for some period</a>
-          </li>
-          
-         <li class="nav-item">
-              <a class="nav-link active" id="yearly-tab" data-toggle="tab" href="#yearly" role="tab" aria-controls="yearly" aria-selected="false" aria-expanded="false">Calculate yearly</a>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link" id="green-tab" data-toggle="tab" href="#green" role="tab" aria-controls="green" aria-selected="false">Green fare</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="predict-tab" data-toggle="tab" href="#predict" role="tab" aria-controls="predict" aria-selected="false" aria-expanded="false">Predict</a>
-          </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="calc" role="tabpanel" aria-labelledby="calc-tab">
-              <p>Calculate for some period</p>
-              <input type="number" id="area-calc" placeholder="Area">
-              <input type="number" id="efficency-calc" placeholder="Efficency">
-              <p>Start time</p>
-              <input type="date" id="start-time-calc">
-              <p>End time</p>
-              <input type="date" id="end-time-calc">
-              <button id="btn-calc"class="btn btn-success">Calculate</button>                                                 
-          </div>
-          <div class="tab-pane fade" id="yearly" role="tabpanel" aria-labelledby="yearly-tab">
-              <p>Calculate yearly</p>
-              <input type="number" id="area-calc-yearly" placeholder="Area">
-              <input type="number" id="efficency-calc-yearly" placeholder="Efficency">
-              <button id="btn-yearly" class="btn btn-success">Calculate</button>
-          </div>
-          <div class="tab-pane fade" id="green" role="tabpanel" aria-labelledby="green-tab">
-              <p>Calculate for green fare</p>
-              <input type="number" id="area-calc-green-fare" placeholder="Area">
-              <input type="number" id="efficency-calc-green-fare" placeholder="Efficency">
-              <p>Start time</p>
-              <input type="date" id="start-time-calc-green-fare">
-              <p>End time</p>
-              <input type="date" id="end-time-calc-green-fare">
-              <input type="number" placeholder="Price green fare" id="price-green-fare">
-              <input type="number" placeholder="Price state fare" id="price-state-fare">
-              <button id="btn-green"class="btn btn-success">Calculate</button>
-          </div>
-          
-          <div class="tab-pane fade" id="predict" role="tabpanel" aria-labelledby="predict-tab">
-              <input type="number" id="area-calc-green-fare" placeholder="Area">
-              <input type="number" id="efficency-calc-green-fare" placeholder="Efficency">
-              <button id="btn-green"class="btn btn-success">Calculate</button>
-          </div>
-        </div>-->
        
            </div>
         
       </div>
     
-      <div class="row">My panels</div>
+    <!--  <div class="row">My panels</div>
       <div class="row">
          <div class="col-md-12">
           <table class="table">
@@ -142,43 +92,77 @@
      
      <div class="row">
          
-     </div>
+     </div> -->
 </div>
 </body>
 <script>
-    
-    function createMap(){
-        
-        var marker;
-        
-        var mapProper={
-            center:new google.maps.LatLng(49.841722, 24.029818),
-            zoom:10,    
-        };
-        var map=new google.maps.Map(document.getElementById("googleMap"),mapProper);
-        
-        google.maps.event.addListener(map, 'click', function(event) {
-            placeMarker(event.latLng);
-            sendPosition(event.latLng);
-        });
-        function sendPosition(location){
-            console.log(location.lat(),location.lng())
-        }
-        function placeMarker(location) {
-            if (marker == undefined){
-                marker = new google.maps.Marker({
-                    position: location,
-                    map: map, 
-                    animation: google.maps.Animation.DROP,
-                });
-            }
-            else{
-                marker.setPosition(location);
-            }
-        }
-};
+      var map;
+      var lviv = {lat: 49.923, lng: 24.148};
 
+      /**
+       * The CenterControl adds a control to the map that recenters the map on
+       * Chicago.
+       * This constructor takes the control DIV as an argument.
+       * @constructor
+       */
+      function CenterControl(controlDiv, map) {
+
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = '#fff';
+        controlUI.style.border = '2px solid #fff';
+        controlUI.style.borderRadius = '3px';
+        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginBottom = '22px';
+        controlUI.style.marginTop = '10px';
+        controlUI.style.marginLeft = '10px';
+        controlUI.style.paddingTop = '10px';
+        controlUI.style.textAlign = 'center';
+        controlUI.title = 'Click to recenter the map';
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior.
+        var controlText = document.createElement('div');
+        controlText.style.color = 'rgb(25,25,25)';
+        controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+        controlText.style.fontSize = '16px';
+        controlText.style.lineHeight = '10px';
+        controlText.style.paddingLeft = '5px';
+        controlText.style.paddingRight = '5px';
+        controlText.innerHTML = 'Wind Map';
+        controlUI.appendChild(controlText);
+
+        // Setup the click event listeners: simply set the map to Chicago.
+        controlUI.addEventListener('click', function() {
+           document.getElementById("map").style.display = "none";
+           document.getElementById("windMap").style.display = "block";
+           document.getElementById("btnGoogleMap").style.display = "block"
+        });
+           document.getElementById("btnGoogleMap").addEventListener("click",function(){
+               document.getElementById("map").style.display = "block";
+               document.getElementById("windMap").style.display = "none";
+               document.getElementById("btnGoogleMap").style.display = "none"
+           });
+      }
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: lviv
+        });
+
+        // Create the DIV to hold the control and call the CenterControl()
+        // constructor passing in this DIV.
+        var centerControlDiv = document.createElement('div');
+        var centerControl = new CenterControl(centerControlDiv, map);
+
+        centerControlDiv.index = 1;
+        map.controls[google.maps.ControlPosition.LEFT_TOP].push(centerControlDiv);
+      }
     </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGkqoGAaHZFqT4v3UYMM7SRq79v6p_p5M&callback=createMap"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGkqoGAaHZFqT4v3UYMM7SRq79v6p_p5M&callback=initMap">
+    </script>
 
 </html>
