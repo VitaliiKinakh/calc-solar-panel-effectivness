@@ -10,9 +10,9 @@
            padding:0;
        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     
     <meta charset="UTF-8">
@@ -23,20 +23,65 @@
        <div class="row">
        <div id = "googleMap" style="width:50vw;height:50vh;padding:0;marging:0;" class"col-md-8"></div>
        <div class="col-md-4">
-       <ul class="nav nav-tabs" id="myTab" role="tablist">
+       <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-cacl-tab" data-toggle="tab" href="#nav-calc" role="tab" aria-controls="nav-calc" aria-selected="true">Calculate for some period</a>
+            <a class="nav-item nav-link" id="nav-yearly-tab" data-toggle="tab" href="#nav-yearly" role="tab" aria-controls="nav-yearly" aria-selected="false">Calculate yearly</a>
+            <a class="nav-item nav-link" id="nav-green-tab" data-toggle="tab" href="#nav-green" role="tab" aria-controls="nav-green" aria-selected="false">Calculate with green fare</a>
+            <a class="nav-item nav-link" id="nav-predict-tab" data-toggle="tab" href="#nav-predict" role="tab" aria-controls="nav-predict" aria-selected="false">Predict</a>
+         </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-calc" role="tabpanel" aria-labelledby="nav-calc-tab">
+                <p>Calculate for some period</p>
+              <input type="number" id="area-calc" placeholder="Area">
+              <input type="number" id="efficency-calc" placeholder="Efficency">
+              <p>Start time</p>
+              <input type="date" id="start-time-calc">
+              <p>End time</p>
+              <input type="date" id="end-time-calc">
+              <button id="btn-calc"class="btn btn-success">Calculate</button>   
+            </div>
+            <div class="tab-pane fade" id="nav-yearly" role="tabpanel" aria-labelledby="nav-yearly-tab">
+              <p>Calculate yearly</p>
+              <input type="number" id="area-calc-yearly" placeholder="Area">
+              <input type="number" id="efficency-calc-yearly" placeholder="Efficency">
+              <button id="btn-yearly" class="btn btn-success">Calculate</button>
+            </div>
+            <div class="tab-pane fade" id="nav-green" role="tabpanel" aria-labelledby="nav-green-tab">
+                 <p>Calculate for green fare</p>
+              <input type="number" id="area-calc-green-fare" placeholder="Area">
+              <input type="number" id="efficency-calc-green-fare" placeholder="Efficency">
+              <p>Start time</p>
+              <input type="date" id="start-time-calc-green-fare">
+              <p>End time</p>
+              <input type="date" id="end-time-calc-green-fare">
+              <input type="number" placeholder="Price green fare" id="price-green-fare">
+              <input type="number" placeholder="Price state fare" id="price-state-fare">
+              <button id="btn-green"class="btn btn-success">Calculate</button>
+            </div>
+            
+            <div class="tab-pane fade" id="nav-predict" role="tabpanel" aria-labelledby="nav-predict-tab">
+              <input type="number" id="area-calc-green-fare" placeholder="Area">
+              <input type="number" id="efficency-calc-green-fare" placeholder="Efficency">
+              <button id="btn-green"class="btn btn-success">Calculate</button>
+            </div>
+            
+        </div>
+       <!--<ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
-              <a class="nav-link active" id="calc-tab" data-toggle="tab" href="#calc" role="tab" aria-controls="calc" aria-selected="true">Calculate for some period</a>
+              <a class="nav-link active" id="calc-tab" data-toggle="tab" href="#calc" role="tab" aria-controls="calc" aria-selected="true" aria-expanded="true">Calculate for some period</a>
           </li>
           
          <li class="nav-item">
-              <a class="nav-link active" id="yearly-tab" data-toggle="tab" href="#yearly" role="tab" aria-controls="yearly" aria-selected="true">Calculate yearly</a>
+              <a class="nav-link active" id="yearly-tab" data-toggle="tab" href="#yearly" role="tab" aria-controls="yearly" aria-selected="false" aria-expanded="false">Calculate yearly</a>
           </li>
           
           <li class="nav-item">
             <a class="nav-link" id="green-tab" data-toggle="tab" href="#green" role="tab" aria-controls="green" aria-selected="false">Green fare</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="predict-tab" data-toggle="tab" href="#predict" role="tab" aria-controls="predict" aria-selected="false">Predict</a>
+            <a class="nav-link" id="predict-tab" data-toggle="tab" href="#predict" role="tab" aria-controls="predict" aria-selected="false" aria-expanded="false">Predict</a>
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -56,7 +101,7 @@
               <input type="number" id="efficency-calc-yearly" placeholder="Efficency">
               <button id="btn-yearly" class="btn btn-success">Calculate</button>
           </div>
-          <div class="tab-pane fade" id="green" role="tabpanel" aria-labelledby="contact-tab">
+          <div class="tab-pane fade" id="green" role="tabpanel" aria-labelledby="green-tab">
               <p>Calculate for green fare</p>
               <input type="number" id="area-calc-green-fare" placeholder="Area">
               <input type="number" id="efficency-calc-green-fare" placeholder="Efficency">
@@ -69,41 +114,13 @@
               <button id="btn-green"class="btn btn-success">Calculate</button>
           </div>
           
-        </div>
-       <!--<table class="table">
-             <thead>
-                 <th>Calculate</th>
-                 <th>Green face</th>
-                 <th>Predict</th>
-             </thead>
-             <tbody>
-                 <tr>
-                     <th><input type="number" placeholder="Effectivness" id="calculate-effectivness"></th>
-                     <th><input type="number" placeholder="Effectivness" id="green-effectivness"></th>
-                     <th><input type="number" placeholder="Effectivness" id="predict-effectivness"></th>
-                 </tr>
-                 <tr>
-                     <th><input type="number" placeholder="Area" id="calculate-area"></th>
-                     <th><input type="number" placeholder="Area" id="green-area"></th>
-                     <th><input type="number" placeholder="Area" id="predict-area"></th>
-                 </tr>
-                 <tr>
-                     <th></th>
-                     <th><input type="number" placeholder="Price GF" id="green-price"></th>
-                     <th></th>
-                 </tr>
-                 <tr>
-                     <th></th>
-                     <th><input type="number" placeholder="Price state" id="state-price"></th>
-                     <th></th>
-                 </tr>
-                 <tr>
-                     <th><button class="btn btn-success" id="calculate">Calculate</button></th>
-                     <th><button class="btn btn-success" id="calculate-green-fare">Calculate</button></th>
-                     <th><button class="btn btn-success" id="calculate-predict">Calculate</button></th>
-                 </tr>
-             </tbody>
-         </table>-->
+          <div class="tab-pane fade" id="predict" role="tabpanel" aria-labelledby="predict-tab">
+              <input type="number" id="area-calc-green-fare" placeholder="Area">
+              <input type="number" id="efficency-calc-green-fare" placeholder="Efficency">
+              <button id="btn-green"class="btn btn-success">Calculate</button>
+          </div>
+        </div>-->
+       
            </div>
         
       </div>
@@ -163,4 +180,5 @@
 
     </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGkqoGAaHZFqT4v3UYMM7SRq79v6p_p5M&callback=createMap"></script>
+<script src="../js/bootstrap.min.js"></script>
 </html>
