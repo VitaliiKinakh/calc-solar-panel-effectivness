@@ -50,27 +50,4 @@ router.route('/')
         }
     });
 
-router.route('/register')
-    .post(function (req, res) {
-        let email = req.body.email;
-        let password = req.body.password;
-        let fullname = req.body.fullname;
-        let salt = crypto.createHash('sha256').update(email + 'WebOne').digest('hex');
-        password = crypto.createHash('sha256').update(password + salt).digest('hex');
-        if (validator.validate(email)) {
-            let user = new userModel({
-                email: email,
-                password: password,
-                salt: salt,
-                fullname: fullname,
-            });
-            user.save(function (err) {
-                if (err) res.status(400).send('Cant register you know');
-                else res.sendStatus(200);
-            })
-        } else {
-            res.status(400).send('Bad email');
-        }
-    });
-
 module.exports = router;
